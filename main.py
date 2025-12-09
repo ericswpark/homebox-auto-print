@@ -48,9 +48,9 @@ class EventHandler(FileSystemEventHandler):
                 # Crop image down to size
                 "-crop 140x140+30+30 "
                 # Extend bottom
-                "-background white -gravity South -splice 0x20 +repage "
+                "-background white -gravity South -splice 0x40 +repage "
                 # Set parameters for text on bottom
-                f"-gravity South -pointsize 20 -fill black -font '{self.font}' "
+                f"-gravity South -pointsize 35 -fill black -font '{self.font}' "
                 # Add text to bottom
                 f"-annotate +0+0 '{asset_id}' "
                 # Resize to fit label
@@ -87,7 +87,7 @@ def main():
         "--recursive", action="store_true", help="Watch subdirectories recursively"
     )
     parser.add_argument(
-        "--font", default="Noto-Sans-Condensed", help="Font to use for asset ID"
+        "--font", default="Noto-Sans-Bold", help="Font to use for asset ID"
     )
     parser.add_argument(
         "--remove", action="store_true", help="Remove original image after printing"
