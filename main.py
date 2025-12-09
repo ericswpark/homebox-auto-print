@@ -73,7 +73,7 @@ class EventHandler(FileSystemEventHandler):
             print("failed")
             print(f"Error: {e}")
             return
-        
+
         # Remove processed image
         os.remove(target_path)
         if self.remove:
