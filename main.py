@@ -6,6 +6,25 @@ from watchdog.events import FileSystemEvent, FileSystemEventHandler
 from watchdog.observers import Observer
 
 
+def process_image(src_path, font, asset_id, target_path):
+    os.system(
+        # Start
+        f"magick '{src_path}' "
+        # Crop image down to size
+        "-crop 140x140+30+30 "
+        # Extend bottom
+        "-background white -gravity South -splice 0x40 +repage "
+        # Set parameters for text on bottom
+        f"-gravity South -pointsize 35 -fill black -font '{font}' "
+        # Add text to bottom
+        f"-annotate +0+0 '{asset_id}' "
+        # Resize to fit label
+        f"-interpolate Integer -filter point -resize x120 "
+        # Output to target path
+        f"{target_path}"
+    )
+
+
 class EventHandler(FileSystemEventHandler):
     def __init__(self, font, remove):
         self.font = font
@@ -42,22 +61,7 @@ class EventHandler(FileSystemEventHandler):
         )
         print("- Processing with Imagemagick...", end="")
         try:
-            os.system(
-                # Start
-                f"magick '{src_path}' "
-                # Crop image down to size
-                "-crop 140x140+30+30 "
-                # Extend bottom
-                "-background white -gravity South -splice 0x40 +repage "
-                # Set parameters for text on bottom
-                f"-gravity South -pointsize 35 -fill black -font '{self.font}' "
-                # Add text to bottom
-                f"-annotate +0+0 '{asset_id}' "
-                # Resize to fit label
-                f"-interpolate Integer -filter point -resize x120 "
-                # Output to target path
-                f"{target_path}"
-            )
+            process_image(src_path, self.font, asset_id, target_path)
             print("done")
         except Exception as e:
             print("failed")
