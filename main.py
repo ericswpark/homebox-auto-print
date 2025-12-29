@@ -84,7 +84,7 @@ class EventHandler(FileSystemEventHandler):
             os.remove(src_path)
 
 
-def main():
+def setup_parser():
     parser = argparse.ArgumentParser(description="Watch a directory for changes")
     parser.add_argument("directory", help="Directory to watch")
     parser.add_argument(
@@ -96,6 +96,11 @@ def main():
     parser.add_argument(
         "--remove", action="store_true", help="Remove original image after printing"
     )
+    return parser
+
+
+def main():
+    parser = setup_parser()
     args = parser.parse_args()
 
     event_handler = EventHandler(args.font, args.remove)
