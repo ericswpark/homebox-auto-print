@@ -73,7 +73,7 @@ class EventHandler(FileSystemEventHandler):
         print("- Printing with ptouch-print...", end="")
         try:
             if self.cable:
-                os.system(f"ptouch-print --chain --image='{target_path}' --pad=4 --image='{target_path}")
+                os.system(f"ptouch-print --chain --image='{target_path}' --pad=4 --image='{target_path}'")
             else:
                 os.system(f"ptouch-print --chain --image='{target_path}'")
             print("done")
