@@ -27,7 +27,7 @@ def process_image(src_path, font, asset_id, target_path):
 
 
 def print_image(cable, image_path):
-    image_arg = f"--image='{image_path}'"
+    image_arg = f"--image={image_path}"
     args = ["ptouch-print", "--chain", image_arg]
 
     if cable:
