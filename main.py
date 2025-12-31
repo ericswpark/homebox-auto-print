@@ -34,9 +34,7 @@ def print_image(cable, image_path):
         args.append("--pad=80")
         args.append(image_arg)
 
-    result = subprocess.run(args, capture_output=False, text=True)
-    if result.returncode != 0:
-        raise Exception("Failed to print image, review output")
+    subprocess.run(args, capture_output=False, text=True, check=True)
 
 
 class EventHandler(FileSystemEventHandler):
