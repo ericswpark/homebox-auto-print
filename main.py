@@ -26,9 +26,16 @@ def process_image(src_path, font, asset_id, target_path):
     )
 
 
-def print_image(cable, image_path):
+def print_image(cable, cut, image_path):
     image_arg = f"--image={image_path}"
-    args = ["ptouch-print", "--chain", image_arg]
+    args = [
+        "ptouch-print",
+    ]
+
+    if not cut:
+        args.append("--chain")
+
+    args.append(image_arg)
 
     if cable:
         args.append("--pad=80")
@@ -38,10 +45,11 @@ def print_image(cable, image_path):
 
 
 class EventHandler(FileSystemEventHandler):
-    def __init__(self, font, remove, cable):
+    def __init__(self, font, remove, cable, cut):
         self.font = font
         self.remove = remove
         self.cable = cable
+        self.cut = cut
 
     def on_any_event(self, event: FileSystemEvent) -> None:
         # Check if file being modified is a Homebox label image
@@ -84,7 +92,7 @@ class EventHandler(FileSystemEventHandler):
         # Print with ptouch-print
         print("- Printing with ptouch-print...", end="")
         try:
-            print_image(self.cable, target_path)
+            print_image(self.cable, self.cut, target_path)
             print("done")
         except Exception as e:
             print("failed")
@@ -114,6 +122,11 @@ def setup_parser():
         action="store_true",
         help="Enable cable mode. Label will be printed twice to wrap around cable",
     )
+    parser.add_argument(
+        "--cut",
+        action="store_true",
+        help="Cuts immediately after printing. Will waste a bit of label tape",
+    )
     return parser
 
 
@@ -121,7 +134,7 @@ def main():
     parser = setup_parser()
     args = parser.parse_args()
 
-    event_handler = EventHandler(args.font, args.remove, args.cable)
+    event_handler = EventHandler(args.font, args.remove, args.cable, args.cut)
     observer = Observer()
     observer.schedule(event_handler, args.directory, recursive=args.recursive)
     observer.start()
