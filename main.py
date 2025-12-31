@@ -1,5 +1,6 @@
 import argparse
 import os
+import subprocess
 import time
 
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
@@ -23,6 +24,19 @@ def process_image(src_path, font, asset_id, target_path):
         # Output to target path
         f"{target_path}"
     )
+
+
+def print_image(cable, image_path):
+    image_arg = f"--image='{image_path}'"
+    args = ["ptouch-print", "--chain", image_arg]
+
+    if cable:
+        args.append("--pad=80")
+        args.append(image_arg)
+
+    result = subprocess.run(args, capture_output=False, text=True)
+    if result.returncode != 0:
+        raise Exception("Failed to print image, review output")
 
 
 class EventHandler(FileSystemEventHandler):
@@ -72,10 +86,7 @@ class EventHandler(FileSystemEventHandler):
         # Print with ptouch-print
         print("- Printing with ptouch-print...", end="")
         try:
-            if self.cable:
-                os.system(f"ptouch-print --chain --image='{target_path}' --pad=80 --image='{target_path}'")
-            else:
-                os.system(f"ptouch-print --chain --image='{target_path}'")
+            print_image(self.cable, target_path)
             print("done")
         except Exception as e:
             print("failed")
