@@ -41,7 +41,12 @@ def print_image(cable, cut, image_path):
         args.append("--pad=80")
         args.append(image_arg)
 
-    subprocess.run(args, capture_output=False, text=True, check=True)
+    try:
+        subprocess.run(args, capture_output=True, text=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"ptouch-print failed with error code {e.returncode}: {e.stderr}")
+    except Exception as e:
+        print(f"An error occurred while printing: {e}")
 
 
 class EventHandler(FileSystemEventHandler):
