@@ -106,8 +106,10 @@ class EventHandler(FileSystemEventHandler):
 
         # Remove processed image
         os.remove(target_path)
+        print("- Removed processed image")
         if self.remove:
             os.remove(src_path)
+            print("- Removed original image")
 
 
 def setup_parser():
